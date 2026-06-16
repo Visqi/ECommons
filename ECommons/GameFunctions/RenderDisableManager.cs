@@ -38,7 +38,13 @@ public unsafe static class RenderDisableManager
     /// <summary>
     /// Initializes RenderDisableManager. You do not need to call it manually. 
     /// </summary>
+    [Obsolete("Do not use Init. Just use PlaceRequest whenever you need to disable render, it will be initialized automatically upon first function call. Just remove this Init call. ", true)]
     public static void Init()
+    {
+        InitializeInternal();
+    }
+
+    private static void InitializeInternal()
     {
         if(Initialized)
         {
@@ -59,7 +65,7 @@ public unsafe static class RenderDisableManager
     /// </summary>
     public static void PlaceRequest()
     {
-        if(!Initialized) Init();
+        if(!Initialized) InitializeInternal();
         if(!Svc.Framework.IsInFrameworkUpdateThread)
         {
             PluginLog.Error($"{nameof(RenderDisableManager)}.{nameof(PlaceRequest)} can only be used in Framework Update thread.");
