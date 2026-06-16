@@ -26,6 +26,7 @@ public unsafe static class RenderDisableManager
     private static byte* RenderDisabled;
     private static HashSet<uint> RenderDisableRequests;
     private static uint[] RenderDisableProcessingFramecount;
+    private static bool IsSubscribed = false;
     /// <summary>
     /// Set to true if you want to output verbose logs. It is advised to just have a checkbox rather than permanently setting it to true. 
     /// </summary>
@@ -56,8 +57,25 @@ public unsafe static class RenderDisableManager
         RenderDisabled = (byte*)&Manager.Instance()->Is3DRenderingDisabled;
         RenderDisableRequests = Svc.PluginInterface.GetOrCreateData<HashSet<uint>>(Name_RenderDisableRequests, () => []);
         RenderDisableProcessingFramecount = Svc.PluginInterface.GetOrCreateData<uint[]>(Name_RenderDisableProcessingFramecount, () => [0]);
-        Svc.Framework.Update += Framework_Update;
         PluginLog.Information($"Initialized RenderDisableManager");
+    }
+
+    private static void SubscribeIfNeeded()
+    {
+        if(!IsSubscribed)
+        {
+            Svc.Framework.Update += Framework_Update;
+            IsSubscribed = true;
+        }
+    }
+
+    private static void UnsubscribeIfNeeded()
+    {
+        if(IsSubscribed)
+        {
+            Svc.Framework.Update -= Framework_Update;
+            IsSubscribed = false;
+        }
     }
 
     /// <summary>
@@ -72,6 +90,7 @@ public unsafe static class RenderDisableManager
             return;
         }
         RenderDisableRequests.Add(ECommonsMain.InstanceUniqueId);
+        SubscribeIfNeeded();
     }
 
     /// <summary>
@@ -118,6 +137,7 @@ public unsafe static class RenderDisableManager
                     if(Debug) PluginLog.Verbose($"[RenderDisableManager] Enabling render because there are no requests");
                     *RenderDisabled = 0;
                 }
+                UnsubscribeIfNeeded();
             }
             else
             {
