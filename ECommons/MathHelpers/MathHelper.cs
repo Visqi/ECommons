@@ -336,6 +336,11 @@ public static class MathHelper
         return new Vector3(vector2.X, Y, vector2.Y);
     }
 
+    public static Vector3 SwapYZ(this Vector3 v)
+    {
+        return new(v.X, v.Z, v.Y);
+    }
+
     public static Vector3 ToVector3(this (float X, float Y, float Z) t) => new(t.X, t.Y, t.Z);
 
     /// <summary>
