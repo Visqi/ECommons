@@ -11,7 +11,7 @@ namespace ECommons.Automation;
 /// <summary>
 /// A class containing chat functionality
 /// </summary>
-// updated version from https://github.com/Infiziert90/ChatTwo/blob/5b58513a5226a2d3b40aca96be4f51c779fab363/ChatTwo/GameFunctions/ChatBox.cs#L9
+// from: https://github.com/Infiziert90/ChatTwo/blob/5b58513a5226a2d3b40aca96be4f51c779fab363/ChatTwo/GameFunctions/ChatBox.cs#L9
 public static unsafe class Chat
 {
     /// <summary>
